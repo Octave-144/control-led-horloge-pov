@@ -1,0 +1,604 @@
+#include "FastLED.h"
+
+#define NUM_STRIPS 1
+#define NUM_LEDS_PER_STRIP 92
+#define BRIGHTNESS 255
+CRGB leds[NUM_LEDS_PER_STRIP];
+#include <Servo.h>
+
+Servo myservo;  // create servo object to control a servo
+
+int potpin = 0;  // analog pin used to connect the potentiometer
+int val;    // variable to read the value from the analog pin
+
+const int hallPin = 12;     // pin de l'arduino sur lequel on branche le capteur
+const int ledPin =  2;     // pin de l'arduino sur lequel on branche la led.
+//Pas obligatoire mais permet de vérifier le bon fonctionnement du capteur rapidement.
+int hallState = 0;          // intialisation de la variable correspondant à la lecture de l'état du capteur
+int f1; // en rpm
+int timer = 1100; // en ms
+int N = 0;
+int delayTime = 1000;
+int charBreak = 2100;
+
+void setup() {
+  FastLED.addLeds<NEOPIXEL, 5>(leds, NUM_LEDS_PER_STRIP);
+  FastLED.setBrightness(  BRIGHTNESS );
+  // initialiser la led comme étant une sortie
+  /*pinMode(ledPin, OUTPUT);
+    // initialiser le capteur à effet hall en entrée
+    pinMode(hallPin, INPUT);*/
+  myservo.attach(9);  // attaches the servo on pin 9 to the servo object
+  Serial.begin(9600);
+}
+
+int a[] = {1, 6, 26, 6, 1};
+int b[] = {31, 21, 21, 10, 0};
+int c1[] = {14, 17, 17, 10, 0};
+int d[] = {31, 17, 17, 14, 0};
+int e[] = {31, 21, 21, 21, 0};
+int f[] = {31, 20, 20, 16, 0};
+int g[] = {14, 17, 19, 10, 0};
+int h[] = {31, 4, 4, 4, 31};
+int i[] = {0, 17, 31, 17, 0};
+int j[] = {0, 17, 30, 16, 0};
+int k[] = {31, 4, 10, 17, 0};
+int l[] = {31, 1, 1, 1, 0};
+int m[] = {31, 12, 3, 12, 31};
+int n[] = {31, 12, 3, 31, 0};
+int o[] = {14, 17, 17, 14, 0};
+int p[] = {31, 20, 20, 8, 0};
+int q2[] = {14, 17, 19, 14, 2};
+int r[] = {31, 20, 22, 9, 0};
+int s[] = {8, 21, 21, 2, 0};
+int t[] = {16, 16, 31, 16, 16};
+int u[] = {30, 1, 1, 30, 0};
+int v[] = {24, 6, 1, 6, 24};
+int w[] = {28, 3, 12, 3, 28};
+int x[] = {17, 10, 4, 10, 17};
+int y[] = {17, 10, 4, 8, 16};
+int z[] = {19, 21, 21, 25, 0};
+int eos[] = {0, 1, 0, 0, 0};
+int excl[] = {0, 29, 0, 0, 0};
+int ques[] = {8, 19, 20, 8, 0};
+int un [] = {4, 8, 31};
+int deux [] = {23, 21, 29};
+int trois [] = {21, 21, 23};
+int quatre [] = {28, 4, 31};
+int cinq [] = {29, 21, 23};
+int six [] = {31, 21, 23};
+int sept [] = {16, 20, 31};
+int huit [] = {31, 21, 31};
+int neuf [] = {29, 21, 31};
+int zero [] = {31, 17, 31};
+int espace[] = {0, 0, 0 };
+//void displayLine(int line) {
+//  int myline;
+ // myline = line;
+ // if (myline >= 16) {
+ //   /*digitalWrite(LED1, HIGH);*/line1();
+  //  myline -= 16;
+ // } else {
+ //   line1f();/*digitalWrite(LED1, LOW);*/
+//  }
+//  if (myline >= 8)  {
+  //  /*digitalWrite(LED2, HIGH);*/line2();
+ //   myline -= 8;
+//  }  else {
+//    line2f();/*digitalWrite(LED2, LOW);*/
+//  }
+//  if (myline >= 4)  {
+//    /*digitalWrite(LED3, HIGH);*/line3();
+ //   myline -= 4;
+//  }  else {
+ //   line3f();/*digitalWrite(LED3, LOW);*/
+ // }
+//  if (myline >= 2)  {
+  //  /*digitalWrite(LED4, HIGH);*/line4();
+ //   myline -= 2;
+//  }  else {
+ //   line4f();/*digitalWrite(LED4, LOW);*/
+ // }
+//  if (myline >= 1)  {
+ //   /*digitalWrite(LED5, HIGH);*/line5();
+ //   myline -= 1;
+//  }  else {
+ //   line5f();/*digitalWrite(LED5, LOW);*/
+ // }
+//}
+void displayLine(int line){
+  (line & 16)? line1() : line1f();
+  (line & 8)? line2() : line2f();
+  (line & 4)? line3() : line3f();
+  (line & 2)? line4() : line4f();
+  (line & 1)? line5() : line5f(); 
+}
+
+void displayChar(char c) {
+  if (c == 'a') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(a[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'b') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(b[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'c') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(c1[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'd') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(d[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'e') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(e[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'f') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(f[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'g') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(g[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'h') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(h[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'i') {
+    for (int it = 0; it < 5; it++) {
+      displayLine(i[it]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'j') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(j[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'k') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(k[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'l') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(l[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'm') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(m[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'n') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(n[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'o') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(o[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'p') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(p[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'q') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(q2[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'r') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(r[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 's') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(s[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 't') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(t[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'u') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(u[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'v') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(v[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'w') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(w[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'x') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(x[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'y') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(y[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == 'z') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(z[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '!') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(excl[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '?') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(ques[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '.') {
+    for (int i = 0; i < 5; i++) {
+      displayLine(eos[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '1') {
+    for (int i = 0; i < 3; i++) {
+      displayLine(un[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '2') {
+    for (int i = 0; i < 3; i++) {
+      displayLine(deux[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '3') {
+    for (int i = 0; i < 3; i++) {
+      displayLine(trois[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '4') {
+    for (int i = 0; i < 3; i++) {
+      displayLine(quatre[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '5') {
+    for (int i = 0; i < 3; i++) {
+      displayLine(cinq[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '6') {
+    for (int i = 0; i < 3; i++) {
+      displayLine(six[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '7') {
+    for (int i = 0; i < 3; i++) {
+      displayLine(sept[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '8') {
+    for (int i = 0; i < 3; i++) {
+      displayLine(huit[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '9') {
+    for (int i = 0; i < 3; i++) {
+      displayLine(neuf[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == '0') {
+    for (int i = 0; i < 3; i++) {
+      displayLine(zero[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  if (c == ' ') {
+    for (int i = 0; i < 3; i++) {
+      displayLine(espace[i]);
+      delay(delayTime);
+    } displayLine(0);
+  }
+  delay(charBreak);
+}
+
+void displayString(char* s) {
+  for (int i = 0; i <= strlen(s); i++) {
+    displayChar(s[i]);
+  }
+}
+
+void loop() {
+
+  //val = analogRead(A0);
+  Serial.println(val);
+  // reads the value of the potentiometer (value between 0 and 1023)
+  val = map(val, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
+  myservo.write(val);                  // sets the servo position according to the scaled value
+  delay(15);
+  // lire l'état du capteur
+  //hallState = digitalRead(hallPin);
+  // calcul de la vitesse de rotation du moteur
+  //while (millis() + 100 = timer) {
+  // if (hallState == HIGH) N = N ++;
+  //  }
+  // f1 = N * timer;
+  // if (hallState == LOW) {
+  // vérification du capteur : la led s'allume lorsque le capteur passe devant un aimant
+  //   digitalWrite(ledPin, HIGH);
+  //  }
+  //  else {
+  //   digitalWrite(ledPin, LOW);
+  // }
+  displayString("0");
+} int line1() {
+  leds[0] = CRGB::Yellow;
+  leds[1] = CRGB::Green;
+  leds[2] = CRGB::Yellow;
+  leds[3] = CRGB::Green;
+  leds[4] = CRGB::Yellow;
+  leds[5] = CRGB::Green;
+  leds[6] = CRGB::Red;
+  leds[7] = CRGB::Green;
+  leds[8] = CRGB::Yellow;
+  leds[9] = CRGB::Green;
+  leds[10] = CRGB::Yellow;
+  leds[11] = CRGB::Green;
+  leds[12] = CRGB::Yellow;
+  leds[13] = CRGB::Green;
+  leds[14] = CRGB::Yellow;
+  leds[15] = CRGB::Green;
+  leds[16] = CRGB::Yellow;
+  leds[17] = CRGB::Green;
+  leds[18] = CRGB::Yellow;
+  leds[19] = CRGB::Green;
+  leds[20] = CRGB::Yellow;
+  leds[21] = CRGB::Green;
+  leds[22] = CRGB::Yellow;
+  leds[23] = CRGB::Green;
+  leds[24] = CRGB::Yellow;
+  leds[25] = CRGB::Green;
+  leds[26] = CRGB::Yellow;
+  leds[27] = CRGB::Green;
+  leds[28] = CRGB::Yellow;
+  leds[29] = CRGB::Green;
+  leds[30] = CRGB::Yellow;
+  leds[31] = CRGB::Green;
+  FastLED.show();
+}
+int line1f() {
+  leds[0] = CRGB::Black;
+  leds[1] = CRGB::Black;
+  leds[2] = CRGB::Black;
+  leds[3] = CRGB::Black;
+  leds[4] = CRGB::Black;
+  leds[5] = CRGB::Black;
+  leds[6] = CRGB::Black;
+  leds[7] = CRGB::Black;
+  leds[8] = CRGB::Black;
+  leds[9] = CRGB::Black;
+  leds[10] = CRGB::Black;
+  leds[11] = CRGB::Black;
+  leds[12] = CRGB::Black;
+  leds[13] = CRGB::Black;
+  leds[14] = CRGB::Black;
+  leds[15] = CRGB::Black;
+  leds[16] = CRGB::Black;
+  leds[17] = CRGB::Black;
+  leds[18] = CRGB::Black;
+  leds[19] = CRGB::Black;
+  leds[20] = CRGB::Black;
+  leds[21] = CRGB::Black;
+  leds[22] = CRGB::Black;
+  leds[23] = CRGB::Black;
+  leds[24] = CRGB::Black;
+  leds[25] = CRGB::Black;
+  leds[26] = CRGB::Black;
+  leds[27] = CRGB::Black;
+  leds[28] = CRGB::Black;
+  leds[29] = CRGB::Black;
+  leds[30] = CRGB::Black;
+  leds[31] = CRGB::Black;
+  leds[32] = CRGB::Black;
+  FastLED.show();
+}
+int line2() {
+  leds[32] = CRGB::Yellow;
+  leds[33] = CRGB::Green;
+  leds[34] = CRGB::Yellow;
+  leds[35] = CRGB::Green;
+  leds[36] = CRGB::Yellow;
+  leds[37] = CRGB::Green;
+  leds[38] = CRGB::Yellow;
+  leds[39] = CRGB::Green;
+  leds[40] = CRGB::Yellow;
+  leds[41] = CRGB::Green;
+  leds[42] = CRGB::Yellow;
+  leds[43] = CRGB::Green;
+  leds[44] = CRGB::Yellow;
+  leds[45] = CRGB::Green;
+  leds[46] = CRGB::Yellow;
+  leds[47] = CRGB::Green;
+  leds[48] = CRGB::Yellow;
+  leds[49] = CRGB::Green;
+  leds[50] = CRGB::Yellow;
+  leds[51] = CRGB::Green;
+  leds[52] = CRGB::Yellow;
+  leds[53] = CRGB::Green;
+  leds[54] = CRGB::Yellow;
+  leds[55] = CRGB::Green;
+  FastLED.show();
+}
+int line2f() {
+  leds[32] = CRGB::Black;
+  leds[33] = CRGB::Black;
+  leds[34] = CRGB::Black;
+  leds[35] = CRGB::Black;
+  leds[36] = CRGB::Black;
+  leds[37] = CRGB::Black;
+  leds[38] = CRGB::Black;
+  leds[39] = CRGB::Black;
+  leds[40] = CRGB::Black;
+  leds[41] = CRGB::Black;
+  leds[42] = CRGB::Black;
+  leds[43] = CRGB::Black;
+  leds[44] = CRGB::Black;
+  leds[45] = CRGB::Black;
+  leds[46] = CRGB::Black;
+  leds[47] = CRGB::Black;
+  leds[48] = CRGB::Black;
+  leds[49] = CRGB::Black;
+  leds[50] = CRGB::Black;
+  leds[51] = CRGB::Black;
+  leds[52] = CRGB::Black;
+  leds[53] = CRGB::Black;
+  leds[54] = CRGB::Black;
+  leds[55] = CRGB::Black;
+  FastLED.show();
+}
+int line3() {
+  leds[56] = CRGB::Yellow;
+  leds[57] = CRGB::Green;
+  leds[58] = CRGB::Yellow;
+  leds[59] = CRGB::Green;
+  leds[60] = CRGB::Yellow;
+  leds[61] = CRGB::Green;
+  leds[62] = CRGB::Yellow;
+  leds[63] = CRGB::Green;
+  leds[64] = CRGB::Yellow;
+  leds[65] = CRGB::Green;
+  leds[66] = CRGB::Yellow;
+  leds[67] = CRGB::Green;
+  leds[68] = CRGB::Yellow;
+  leds[69] = CRGB::Green;
+  leds[70] = CRGB::Yellow;
+  leds[71] = CRGB::Green;
+  FastLED.show();
+}
+int line3f() {
+  leds[56] = CRGB::Black;
+  leds[57] = CRGB::Black;
+  leds[58] = CRGB::Black;
+  leds[59] = CRGB::Black;
+  leds[60] = CRGB::Black;
+  leds[61] = CRGB::Black;
+  leds[62] = CRGB::Black;
+  leds[63] = CRGB::Black;
+  leds[64] = CRGB::Black;
+  leds[65] = CRGB::Black;
+  leds[66] = CRGB::Black;
+  leds[67] = CRGB::Black;
+  leds[68] = CRGB::Black;
+  leds[69] = CRGB::Black;
+  leds[70] = CRGB::Black;
+  leds[71] = CRGB::Black;
+  FastLED.show();
+}
+int line4() {
+  leds[72] = CRGB::Yellow;
+  leds[73] = CRGB::Green;
+  leds[74] = CRGB::Yellow;
+  leds[75] = CRGB::Green;
+  leds[76] = CRGB::Yellow;
+  leds[77] = CRGB::Green;
+  leds[78] = CRGB::Yellow;
+  leds[79] = CRGB::Green;
+  leds[80] = CRGB::Yellow;
+  leds[81] = CRGB::Green;
+  leds[82] = CRGB::Yellow;
+  leds[83] = CRGB::Green;
+  FastLED.show();
+}
+int line4f() {
+  leds[72] = CRGB::Black;
+  leds[73] = CRGB::Black;
+  leds[74] = CRGB::Black;
+  leds[75] = CRGB::Black;
+  leds[76] = CRGB::Black;
+  leds[77] = CRGB::Black;
+  leds[78] = CRGB::Black;
+  leds[79] = CRGB::Black;
+  leds[80] = CRGB::Black;
+  leds[81] = CRGB::Black;
+  leds[82] = CRGB::Black;
+  leds[83] = CRGB::Black;
+  FastLED.show();
+}
+int line5() {
+  leds[84] = CRGB::Green;
+  leds[85] = CRGB::Yellow;
+  leds[86] = CRGB::Green;
+  leds[87] = CRGB::Yellow;
+  leds[88] = CRGB::Green;
+  leds[89] = CRGB::Yellow;
+  leds[90] = CRGB::Green;
+  leds[91] = CRGB::Blue;
+  FastLED.show();
+}
+int line5f() {
+  leds[84] = CRGB::Black;
+  leds[85] = CRGB::Black;
+  leds[86] = CRGB::Black;
+  leds[87] = CRGB::Black;
+  leds[88] = CRGB::Black;
+  leds[89] = CRGB::Black;
+  leds[90] = CRGB::Black;
+  leds[91] = CRGB::Black;
+  FastLED.show();
+}
